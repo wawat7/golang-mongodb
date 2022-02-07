@@ -1,7 +1,24 @@
 package main
 
-import "fmt"
+import (
+	"github.com/gin-gonic/gin"
+	"golang-mongodb/app"
+	"golang-mongodb/user"
+)
 
 func main() {
-	fmt.Println("aw")
+
+	// Setup DB
+	database := app.NewMongoDatabase()
+
+	userRepository := user.NewRepository(database)
+	userService := user.NewService(userRepository)
+	userController := user.NewController(userService)
+
+	route := gin.Default()
+
+	userController.Route(route)
+
+	route.Run(":8080")
+
 }
